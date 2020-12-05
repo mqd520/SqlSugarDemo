@@ -12,21 +12,69 @@ using SqlSugarDemo.IRepository;
 
 namespace SqlSugarDemo.Repository
 {
-    public class Repository<T> : IRepository<T>
+    public class Repository<T> : IRepository<T> where T : class, new()
     {
         #region Common
         /// <summary>
-        /// Get Client
+        /// Get Db
         /// </summary>
         /// <returns></returns>
-        protected SqlSugarClient GetClient()
+        protected SqlSugarClient GetDb()
         {
-            return SqlSugarHelper.GetClient();
+            return SqlSugarHelper.GetDb();
         }
         #endregion
 
 
         #region Query
+        #region Query Single
+        /// <summary>
+        /// Query Single
+        /// </summary>
+        /// <typeparam name="Tkey"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public T QuerySingleById<Tkey>(Tkey id)
+        {
+            using (var db = GetDb())
+            {
+                return db.Queryable<T>().In<Tkey>(id).First();
+            }
+        }
+
+        /// <summary>
+        /// Query Single
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public T QuerySingle(Expression<Func<T, bool>> where)
+        {
+            using (var db = GetDb())
+            {
+                return db.Queryable<T>().Where(where).First();
+            }
+        }
+
+        /// <summary>
+        /// Query Single
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public T QuerySingle(IEnumerable<Expression<Func<T, bool>>> wheres)
+        {
+            using (var db = GetDb())
+            {
+                var query = db.Queryable<T>();
+                foreach (var item in wheres)
+                {
+                    query = query.Where(item);
+                }
+
+                return query.First();
+            }
+        }
+        #endregion
+
         #region Query All
         /// <summary>
         /// Query All
@@ -34,667 +82,466 @@ namespace SqlSugarDemo.Repository
         /// <returns></returns>
         public IList<T> QueryAll()
         {
-            var client = GetClient();
-
-            return client.Queryable<T>().ToList();
+            using (var db = GetDb())
+            {
+                return db.Queryable<T>().Take(10).ToList();
+            }
         }
 
-        ///// <summary>
-        ///// Query All
-        ///// </summary>
-        ///// <param name="keySelector"></param>
-        ///// <param name="asc"></param>
-        ///// <returns></returns>
-        //public IList<T> QueryAll<TKey>(Expression<Func<T, TKey>> keySelector, bool asc)
-        //{
-        //    IList<T> ls = new List<T>();
+        /// <summary>
+        /// Query All
+        /// </summary>
+        /// <param name="keySelector"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public IList<T> QueryAll(Expression<Func<T, object>> keySelector, bool asc)
+        {
+            using (var db = GetDb())
+            {
+                var query = db.Queryable<T>();
+                if (asc)
+                {
+                    query = query.OrderBy(keySelector, OrderByType.Asc);
+                }
+                else
+                {
+                    query = query.OrderBy(keySelector, OrderByType.Desc);
+                }
 
-        //    var session = OpenSession();
-        //    var query = session.Query<T>();
-        //    if (asc)
-        //    {
-        //        query = query.OrderBy(keySelector);
-        //    }
-        //    else
-        //    {
-        //        query = query.OrderByDescending(keySelector);
-        //    }
+                return query.ToList();
+            }
+        }
 
-        //    try
-        //    {
-        //        ls = query.ToList();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        session.Close();
-        //        throw e;
-        //    }
+        /// <summary>
+        /// Query All
+        /// </summary>
+        /// <param name="lsWhere"></param>
+        /// <returns></returns>
+        public IList<T> QueryAll(Expression<Func<T, bool>> where)
+        {
+            using (var db = GetDb())
+            {
+                var query = db.Queryable<T>();
+                query = query.Where(where);
 
-        //    session.Close();
+                return query.ToList();
+            }
+        }
 
-        //    return ls;
-        //}
+        /// <summary>
+        /// Query All
+        /// </summary>
+        /// <param name="lsWhere"></param>
+        /// <returns></returns>
+        public IList<T> QueryAll(IList<Expression<Func<T, bool>>> lsWhere)
+        {
+            using (var db = GetDb())
+            {
+                var query = db.Queryable<T>();
+                foreach (var item in lsWhere)
+                {
+                    query = query.Where(item);
+                }
 
-        ///// <summary>
-        ///// Query All
-        ///// </summary>
-        ///// <param name="lsWhere"></param>
-        ///// <returns></returns>
-        //public IList<T> QueryAll(Expression<Func<T, bool>> where)
-        //{
-        //    IList<T> ls = new List<T>();
+                return query.ToList();
+            }
+        }
 
-        //    var session = OpenSession();
-        //    var query = session.Query<T>();
-        //    query = query.Where(where);
+        /// <summary>
+        /// Query All
+        /// </summary>
+        /// <param name="lsWhere"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public IList<T> QueryAll(IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, object>> keySelector, bool asc)
+        {
+            using (var db = GetDb())
+            {
+                var query = db.Queryable<T>();
+                foreach (var item in lsWhere)
+                {
+                    query = query.Where(item);
+                }
+                if (asc)
+                {
+                    query = query.OrderBy(keySelector, OrderByType.Asc);
+                }
+                else
+                {
+                    query = query.OrderBy(keySelector, OrderByType.Desc);
+                }
 
-        //    try
-        //    {
-        //        ls = query.ToList();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        session.Close();
-        //        throw e;
-        //    }
+                return query.ToList();
+            }
+        }
 
-        //    session.Close();
+        /// <summary>
+        /// Query All
+        /// </summary>
+        /// <param name="where"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public IList<T> QueryAll(Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc)
+        {
+            using (var db = GetDb())
+            {
+                var query = db.Queryable<T>();
+                query = query.Where(where);
+                if (asc)
+                {
+                    query = query.OrderBy(keySelector, OrderByType.Asc);
+                }
+                else
+                {
+                    query = query.OrderBy(keySelector, OrderByType.Desc);
+                }
 
-        //    return ls;
-        //}
-
-        ///// <summary>
-        ///// Query All
-        ///// </summary>
-        ///// <param name="lsWhere"></param>
-        ///// <returns></returns>
-        //public IList<T> QueryAll(IList<Expression<Func<T, bool>>> lsWhere)
-        //{
-        //    IList<T> ls = new List<T>();
-
-        //    var session = OpenSession();
-        //    var query = session.Query<T>();
-        //    foreach (var item in lsWhere)
-        //    {
-        //        query = query.Where(item);
-        //    }
-
-        //    try
-        //    {
-        //        ls = query.ToList();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        session.Close();
-        //        throw e;
-        //    }
-
-        //    session.Close();
-
-        //    return ls;
-        //}
-
-        ///// <summary>
-        ///// Query All
-        ///// </summary>
-        ///// <typeparam name="TKey"></typeparam>
-        ///// <param name="lsWhere"></param>
-        ///// <param name="keySelector"></param>
-        ///// <param name="asc"></param>
-        ///// <returns></returns>
-        //public IList<T> QueryAll<TKey>(IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, TKey>> keySelector, bool asc)
-        //{
-        //    IList<T> ls = new List<T>();
-
-        //    var session = OpenSession();
-        //    var query = session.Query<T>();
-        //    foreach (var item in lsWhere)
-        //    {
-        //        query = query.Where(item);
-        //    }
-        //    if (asc)
-        //    {
-        //        query = query.OrderBy(keySelector);
-        //    }
-        //    else
-        //    {
-        //        query = query.OrderByDescending(keySelector);
-        //    }
-
-        //    try
-        //    {
-        //        ls = query.ToList();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        session.Close();
-        //        throw e;
-        //    }
-
-        //    session.Close();
-
-        //    return ls;
-        //}
-
-        ///// <summary>
-        ///// Query All
-        ///// </summary>
-        ///// <typeparam name="TKey"></typeparam>
-        ///// <param name="where"></param>
-        ///// <param name="keySelector"></param>
-        ///// <param name="asc"></param>
-        ///// <returns></returns>
-        //public IList<T> QueryAll<TKey>(Expression<Func<T, bool>> where, Expression<Func<T, TKey>> keySelector, bool asc)
-        //{
-        //    IList<T> ls = new List<T>();
-
-        //    var session = OpenSession();
-        //    var query = session.Query<T>();
-        //    query = query.Where(where);
-        //    if (asc)
-        //    {
-        //        query = query.OrderBy(keySelector);
-        //    }
-        //    else
-        //    {
-        //        query = query.OrderByDescending(keySelector);
-        //    }
-
-        //    try
-        //    {
-        //        ls = query.ToList();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        session.Close();
-        //        throw e;
-        //    }
-
-        //    session.Close();
-
-        //    return ls;
-        //}
+                return query.ToList();
+            }
+        }
         #endregion
 
 
         #region Query Paging
-        ///// <summary>
-        ///// Query Paging
-        ///// </summary>
-        ///// <param name="page"></param>
-        ///// <param name="size"></param>
-        ///// <param name="count"></param>
-        ///// <returns></returns>
-        //public IList<T> QueryPaging(int page, int size, out int count)
-        //{
-        //    IList<T> ls = new List<T>();
+        /// <summary>
+        /// Query Paging
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public IList<T> QueryPaging(int page, int size, out int count)
+        {
+            using (var db = GetDb())
+            {
+                count = 0;
+                var query = db.Queryable<T>();
 
-        //    count = 0;
-        //    var session = OpenSession();
-        //    var query = session.Query<T>();
+                count = query.Count();
+                if (count > 0)
+                {
+                    query = query.Skip((page - 1) * size).Take(size);
 
-        //    try
-        //    {
-        //        count = query.Count();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        session.Close();
-        //        throw e;
-        //    }
+                    return query.ToList();
+                }
+                else
+                {
+                    return new List<T>();
+                }
+            }
+        }
 
-        //    if (count > 0)
-        //    {
-        //        query = query.Skip((page - 1) * size).Take(size);
+        /// <summary>
+        /// Query Paging
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public IList<T> QueryPaging(int page, int size, out int count, Expression<Func<T, object>> keySelector, bool asc)
+        {
+            using (var db = GetDb())
+            {
+                count = 0;
+                var query = db.Queryable<T>();
 
-        //        try
-        //        {
-        //            ls = query.ToList();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            session.Close();
-        //            throw e;
-        //        }
-        //    }
+                count = query.Count();
+                if (count > 0)
+                {
+                    if (asc)
+                    {
+                        query = query.OrderBy(keySelector, OrderByType.Asc);
+                    }
+                    else
+                    {
+                        query = query.OrderBy(keySelector, OrderByType.Desc);
+                    }
 
-        //    session.Close();
+                    query = query.Skip((page - 1) * size).Take(size);
 
-        //    return ls;
-        //}
+                    return query.ToList();
+                }
+                else
+                {
+                    return new List<T>();
+                }
+            }
+        }
 
-        ///// <summary>
-        ///// Query Paging
-        ///// </summary>
-        ///// <param name="page"></param>
-        ///// <param name="size"></param>
-        ///// <param name="count"></param>
-        ///// <returns></returns>
-        //public IList<T> QueryPaging<TKey>(int page, int size, out int count, Expression<Func<T, TKey>> keySelector, bool asc)
-        //{
-        //    IList<T> ls = new List<T>();
+        /// <summary>
+        /// Query Paging
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="count"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public IList<T> QueryPaging(int page, int size, out int count, Expression<Func<T, bool>> where)
+        {
+            using (var db = GetDb())
+            {
+                count = 0;
+                var query = db.Queryable<T>();
+                query = query.Where(where);
 
-        //    count = 0;
-        //    var session = OpenSession();
-        //    var query = session.Query<T>();
+                count = query.Count();
+                if (count > 0)
+                {
+                    query = query.Skip((page - 1) * size).Take(size);
 
-        //    try
-        //    {
-        //        count = query.Count();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        session.Close();
-        //        throw e;
-        //    }
+                    return query.ToList();
+                }
+                else
+                {
+                    return new List<T>();
+                }
+            }
+        }
 
-        //    if (count > 0)
-        //    {
-        //        if (asc)
-        //        {
-        //            query = query.OrderBy(keySelector);
-        //        }
-        //        else
-        //        {
-        //            query = query.OrderByDescending(keySelector);
-        //        }
-        //        query = query.Skip((page - 1) * size).Take(size);
+        /// <summary>
+        /// Query Paging
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="count"></param>
+        /// <param name="lsWhere"></param>
+        /// <returns></returns>
+        public IList<T> QueryPaging(int page, int size, out int count, IList<Expression<Func<T, bool>>> lsWhere)
+        {
+            using (var db = GetDb())
+            {
+                count = 0;
+                var query = db.Queryable<T>();
+                foreach (var item in lsWhere)
+                {
+                    query = query.Where(item);
+                }
 
-        //        try
-        //        {
-        //            ls = query.ToList();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            session.Close();
-        //            throw e;
-        //        }
-        //    }
+                count = query.Count();
+                if (count > 0)
+                {
+                    query = query.Skip((page - 1) * size).Take(size);
 
-        //    session.Close();
+                    return query.ToList();
+                }
+                else
+                {
+                    return new List<T>();
+                }
+            }
+        }
 
-        //    return ls;
-        //}
+        /// <summary>
+        /// Query Paging
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="count"></param>
+        /// <param name="lsWhere"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public IList<T> QueryPaging(int page, int size, out int count, IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, object>> keySelector, bool asc)
+        {
+            using (var db = GetDb())
+            {
+                count = 0;
+                var query = db.Queryable<T>();
+                foreach (var item in lsWhere)
+                {
+                    query = query.Where(item);
+                }
 
-        ///// <summary>
-        ///// Query Paging
-        ///// </summary>
-        ///// <param name="page"></param>
-        ///// <param name="size"></param>
-        ///// <param name="count"></param>
-        ///// <param name="where"></param>
-        ///// <returns></returns>
-        //public IList<T> QueryPaging(int page, int size, out int count, Expression<Func<T, bool>> where)
-        //{
-        //    IList<T> ls = new List<T>();
+                count = query.Count();
+                if (count > 0)
+                {
+                    if (asc)
+                    {
+                        query = query.OrderBy(keySelector, OrderByType.Asc);
+                    }
+                    else
+                    {
+                        query = query.OrderBy(keySelector, OrderByType.Desc);
+                    }
+                    query = query.Skip((page - 1) * size).Take(size);
 
-        //    count = 0;
-        //    var session = OpenSession();
-        //    var query = session.Query<T>();
-        //    query = query.Where(where);
+                    return query.ToList();
+                }
+                else
+                {
+                    return new List<T>();
+                }
+            }
+        }
 
-        //    try
-        //    {
-        //        count = query.Count();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        session.Close();
-        //        throw e;
-        //    }
+        /// <summary>
+        /// Query Paging
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="count"></param>
+        /// <param name="where"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public IList<T> QueryPaging(int page, int size, out int count, Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc)
+        {
+            using (var db = GetDb())
+            {
+                count = 0;
+                var query = db.Queryable<T>();
+                query = query.Where(where);
 
-        //    if (count > 0)
-        //    {
-        //        query = query.Skip((page - 1) * size).Take(size);
+                count = query.Count();
+                if (count > 0)
+                {
+                    if (asc)
+                    {
+                        query = query.OrderBy(keySelector, OrderByType.Asc);
+                    }
+                    else
+                    {
+                        query = query.OrderBy(keySelector, OrderByType.Desc);
+                    }
+                    query = query.Skip((page - 1) * size).Take(size);
 
-        //        try
-        //        {
-        //            ls = query.ToList();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            session.Close();
-        //            throw e;
-        //        }
-        //    }
-
-        //    session.Close();
-
-        //    return ls;
-        //}
-
-        ///// <summary>
-        ///// Query Paging
-        ///// </summary>
-        ///// <param name="page"></param>
-        ///// <param name="size"></param>
-        ///// <param name="count"></param>
-        ///// <param name="lsWhere"></param>
-        ///// <returns></returns>
-        //public IList<T> QueryPaging(int page, int size, out int count, IList<Expression<Func<T, bool>>> lsWhere)
-        //{
-        //    IList<T> ls = new List<T>();
-
-        //    count = 0;
-        //    var session = OpenSession();
-        //    var query = session.Query<T>();
-        //    foreach (var item in lsWhere)
-        //    {
-        //        query = query.Where(item);
-        //    }
-
-        //    try
-        //    {
-        //        count = query.Count();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        session.Close();
-        //        throw e;
-        //    }
-
-        //    if (count > 0)
-        //    {
-        //        query = query.Skip((page - 1) * size).Take(size);
-
-        //        try
-        //        {
-        //            ls = query.ToList();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            session.Close();
-        //            throw e;
-        //        }
-        //    }
-
-        //    session.Close();
-
-        //    return ls;
-        //}
-
-        ///// <summary>
-        ///// Query Paging
-        ///// </summary>
-        ///// <typeparam name="TKey"></typeparam>
-        ///// <param name="page"></param>
-        ///// <param name="size"></param>
-        ///// <param name="count"></param>
-        ///// <param name="lsWhere"></param>
-        ///// <param name="keySelector"></param>
-        ///// <param name="asc"></param>
-        ///// <returns></returns>
-        //public IList<T> QueryPaging<TKey>(int page, int size, out int count, IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, TKey>> keySelector, bool asc)
-        //{
-        //    IList<T> ls = new List<T>();
-
-        //    count = 0;
-        //    var session = OpenSession();
-        //    var query = session.Query<T>();
-        //    foreach (var item in lsWhere)
-        //    {
-        //        query = query.Where(item);
-        //    }
-
-        //    try
-        //    {
-        //        count = query.Count();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        session.Close();
-        //        throw e;
-        //    }
-
-        //    if (count > 0)
-        //    {
-        //        if (asc)
-        //        {
-        //            query = query.OrderBy(keySelector);
-        //        }
-        //        else
-        //        {
-        //            query = query.OrderByDescending(keySelector);
-        //        }
-        //        query = query.Skip((page - 1) * size).Take(size);
-
-        //        try
-        //        {
-        //            ls = query.ToList();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            session.Close();
-        //            throw e;
-        //        }
-        //    }
-
-        //    session.Close();
-
-        //    return ls;
-        //}
-
-        ///// <summary>
-        ///// Query Paging
-        ///// </summary>
-        ///// <typeparam name="TKey"></typeparam>
-        ///// <param name="page"></param>
-        ///// <param name="size"></param>
-        ///// <param name="count"></param>
-        ///// <param name="where"></param>
-        ///// <param name="keySelector"></param>
-        ///// <param name="asc"></param>
-        ///// <returns></returns>
-        //public IList<T> QueryPaging<TKey>(int page, int size, out int count, Expression<Func<T, bool>> where, Expression<Func<T, TKey>> keySelector, bool asc)
-        //{
-        //    IList<T> ls = new List<T>();
-
-        //    count = 0;
-        //    var session = OpenSession();
-        //    var query = session.Query<T>();
-        //    query = query.Where(where);
-
-        //    try
-        //    {
-        //        count = query.Count();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        session.Close();
-        //        throw e;
-        //    }
-
-        //    if (count > 0)
-        //    {
-        //        if (asc)
-        //        {
-        //            query = query.OrderBy(keySelector);
-        //        }
-        //        else
-        //        {
-        //            query = query.OrderByDescending(keySelector);
-        //        }
-        //        query = query.Skip((page - 1) * size).Take(size);
-
-        //        try
-        //        {
-        //            ls = query.ToList();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            session.Close();
-        //            throw e;
-        //        }
-        //    }
-
-        //    session.Close();
-
-        //    return ls;
-        //}
+                    return query.ToList();
+                }
+                else
+                {
+                    return new List<T>();
+                }
+            }
+        }
         #endregion
         #endregion
 
 
         #region Add
-        ///// <summary>
-        ///// Add
-        ///// </summary>
-        ///// <param name="entity"></param>
-        ///// <returns></returns>
-        //public object Add(T entity)
-        //{
-        //    object obj = new object();
+        /// <summary>
+        /// Add
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public int Add(T entity)
+        {
+            using (var db = GetDb())
+            {
+                return db.Insertable<T>(entity).ExecuteReturnIdentity();
+            }
+        }
 
-        //    var session = OpenSession();
-        //    try
-        //    {
-        //        obj = session.Save(entity);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        session.Close();
-        //        throw e;
-        //    }
+        /// <summary>
+        /// Add1
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public T Add1(T entity)
+        {
+            using (var db = GetDb())
+            {
+                return db.Insertable<T>(entity).ExecuteReturnEntity();
+            }
+        }
 
-        //    session.Close();
-
-        //    return obj;
-        //}
-
-        ///// <summary>
-        ///// Add
-        ///// </summary>
-        ///// <param name="entities"></param>
-        ///// <returns></returns>
-        //public IList<object> Add(IList<T> entities)
-        //{
-        //    IList<object> ls = new List<object>();
-
-        //    var session = OpenSession();
-        //    using (ITransaction transaction = session.BeginTransaction())
-        //    {
-        //        try
-        //        {
-        //            foreach (var item in entities)
-        //            {
-        //                object obj = session.Save(item);
-        //                ls.Add(obj);
-        //            }
-        //            transaction.Commit();
-        //        }
-        //        catch (HibernateException)
-        //        {
-        //            transaction.Rollback();
-        //            throw;
-        //        }
-        //    }
-
-        //    return ls;
-        //}
+        /// <summary>
+        /// Add
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public int Add(IEnumerable<T> entities)
+        {
+            using (var db = GetDb())
+            {
+                return db.Insertable<T>(entities.ToArray()).ExecuteCommand();
+            }
+        }
         #endregion
 
 
         #region Update
-        ///// <summary>
-        ///// Update
-        ///// </summary>
-        ///// <param name="entity"></param>
-        ///// <returns></returns>
-        //public void Update(T entity)
-        //{
-        //    var session = OpenSession();
+        /// <summary>
+        /// Update
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public int Update(T entity)
+        {
+            using (var db = GetDb())
+            {
+                return db.Updateable<T>(entity).ExecuteCommand();
+            }
+        }
 
-        //    try
-        //    {
-        //        session.SaveOrUpdate(entity);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        session.Close();
-        //        throw e;
-        //    }
-
-        //    session.Close();
-        //}
-
-        ///// <summary>
-        ///// Update
-        ///// </summary>
-        ///// <param name="entities"></param>
-        ///// <returns></returns>
-        //public void Update(IList<T> entities)
-        //{
-        //    var session = OpenSession();
-        //    using (ITransaction transaction = session.BeginTransaction())
-        //    {
-        //        try
-        //        {
-        //            foreach (var item in entities)
-        //            {
-        //                session.SaveOrUpdate(item);
-        //            }
-        //            transaction.Commit();
-        //        }
-        //        catch (HibernateException e)
-        //        {
-        //            transaction.Rollback();
-        //            throw e;
-        //        }
-        //    }
-
-        //    session.Close();
-        //}
+        /// <summary>
+        /// Update
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public int Update(IEnumerable<T> entities)
+        {
+            using (var db = GetDb())
+            {
+                return db.Updateable<T>(entities.ToList()).ExecuteCommand();
+            }
+        }
         #endregion
 
 
         #region Delete
-        ///// <summary>
-        ///// Delete
-        ///// </summary>
-        ///// <param name="entity"></param>
-        //public void Delete(T entity)
-        //{
-        //    var session = OpenSession();
+        /// <summary>
+        /// Delete
+        /// </summary>
+        /// <param name="entity"></param>
+        public int Delete(T entity)
+        {
+            using (var db = GetDb())
+            {
+                return db.Deleteable<T>().ExecuteCommand();
+            }
+        }
 
-        //    try
-        //    {
-        //        session.Delete(entity);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        session.Close();
-        //        throw e;
-        //    }
+        /// <summary>
+        /// Delete
+        /// </summary>
+        /// <param name="entity"></param>
+        public int Delete(IEnumerable<T> entities)
+        {
+            using (var db = GetDb())
+            {
+                return db.Deleteable<T>().Where(entities.ToList()).ExecuteCommand();
+            }
+        }
 
-        //    session.Close();
-        //}
+        /// <summary>
+        /// Delete
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public int Delete<TKey>(TKey id) where TKey : struct
+        {
+            using (var db = GetDb())
+            {
+                return db.Deleteable<T>().In<TKey>(id).ExecuteCommand();
+            }
+        }
 
-        ///// <summary>
-        ///// Delete
-        ///// </summary>
-        ///// <param name="key"></param>
-        //public void Delete(object key)
-        //{
-        //    var session = OpenSession();
-
-        //    try
-        //    {
-        //        T t = session.Get<T>(key);
-        //        if (t != null)
-        //        {
-        //            session.Delete(t);
-        //        }
-
-        //        session.Flush();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        session.Close();
-        //        throw e;
-        //    }
-
-        //    session.Close();
-        //}
+        /// <summary>
+        /// Delete
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public int Delete<TKey>(IEnumerable<TKey> ids) where TKey : struct
+        {
+            using (var db = GetDb())
+            {
+                return db.Deleteable<T>().In<TKey>(ids.ToArray()).ExecuteCommand();
+            }
+        }
         #endregion
     }
 }

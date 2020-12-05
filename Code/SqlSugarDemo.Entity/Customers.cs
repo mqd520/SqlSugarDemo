@@ -1,14 +1,17 @@
 ﻿using System;
 
+using SqlSugar;
+
 namespace SqlSugarDemo.Entity
 {
     //Customers
+    [SugarTable("customers")]
     public class Customers
     {
-
         /// <summary>
         /// CustomerId
         /// </summary>
+        [SugarColumn(IsPrimaryKey = true, ColumnName = "CustomerID")]
         public virtual string CustomerId
         {
             get;

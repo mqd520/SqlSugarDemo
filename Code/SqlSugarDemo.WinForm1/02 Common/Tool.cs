@@ -46,20 +46,23 @@ namespace SqlSugarDemo.WinForm1._02_Common
             }
             foreach (T item in list)
             {
-                string[] arr = new string[pi.Length];
-                for (int j = 0; j < pi.Length; j++)
+                if (item != null)
                 {
-                    object val = pi[j].GetValue(item);
-                    if (val != null)
+                    string[] arr = new string[pi.Length];
+                    for (int j = 0; j < pi.Length; j++)
                     {
-                        arr[j] = val.ToString();
+                        object val = pi[j].GetValue(item);
+                        if (val != null)
+                        {
+                            arr[j] = val.ToString();
+                        }
+                        else
+                        {
+                            arr[j] = "";
+                        }
                     }
-                    else
-                    {
-                        arr[j] = "";
-                    }
+                    lv.Items.Add(new ListViewItem(arr));
                 }
-                lv.Items.Add(new ListViewItem(arr));
             }
             lv.EndUpdate();
         }
