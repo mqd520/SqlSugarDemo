@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SqlSugar, Version=5.0.1.4, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\sqlSugar.5.0.1.4\lib\SqlSugar.dll</HintPath>
+    <Reference Include="SqlSugar, Version=5.0.1.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\sqlSugar.5.0.1.5\lib\SqlSugar.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -49,13 +49,13 @@
     <Compile Include="SqlSugarHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{21aeecdb-3f06-4e66-9322-ac796148a0d2}</Project>
       <Name>Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
