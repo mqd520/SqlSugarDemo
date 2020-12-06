@@ -5,9 +5,9 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SqlSugarDemo.IRepository
+namespace SqlSugarDemo.IService
 {
-    public interface IRepository<T> where T : class, new()
+    public interface IService<T> where T : class, new()
     {
         #region Query
         #region Query Single

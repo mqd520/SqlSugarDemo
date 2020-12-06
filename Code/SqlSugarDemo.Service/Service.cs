@@ -5,10 +5,18 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SqlSugarDemo.IRepository
+using SqlSugarDemo.IRepository;
+using SqlSugarDemo.Repository;
+
+namespace SqlSugarDemo.Service
 {
-    public interface IRepository<T> where T : class, new()
+    public class Service<T> where T : class, new()
     {
+        #region Property
+        protected IRepository<T> Repository { get { return new Repository<T>(); } }
+        #endregion
+
+
         #region Query
         #region Query Single
         /// <summary>
@@ -17,14 +25,20 @@ namespace SqlSugarDemo.IRepository
         /// <typeparam name="Tkey"></typeparam>
         /// <param name="id"></param>
         /// <returns></returns>
-        T QuerySingleById<Tkey>(Tkey id);
+        public T QuerySingleById<Tkey>(Tkey id)
+        {
+            return Repository.QuerySingleById<Tkey>(id);
+        }
 
         /// <summary>
         /// Query Single
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        T QuerySingle(Expression<Func<T, bool>> where);
+        public T QuerySingle(Expression<Func<T, bool>> where)
+        {
+            return Repository.QuerySingle(where);
+        }
 
         /// <summary>
         /// Query Single
@@ -32,7 +46,10 @@ namespace SqlSugarDemo.IRepository
         /// <typeparam name="Tkey"></typeparam>
         /// <param name="where"></param>
         /// <returns></returns>
-        T QuerySingle(IEnumerable<Expression<Func<T, bool>>> wheres);
+        public T QuerySingle(IEnumerable<Expression<Func<T, bool>>> wheres)
+        {
+            return Repository.QuerySingle(wheres);
+        }
         #endregion
 
 
@@ -41,7 +58,10 @@ namespace SqlSugarDemo.IRepository
         /// Query All
         /// </summary>
         /// <returns></returns>
-        IList<T> QueryAll();
+        public IList<T> QueryAll()
+        {
+            return Repository.QueryAll();
+        }
 
         /// <summary>
         /// Query All
@@ -49,21 +69,30 @@ namespace SqlSugarDemo.IRepository
         /// <param name="keySelector"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        IList<T> QueryAll(Expression<Func<T, object>> keySelector, bool asc);
+        public IList<T> QueryAll(Expression<Func<T, object>> keySelector, bool asc)
+        {
+            return Repository.QueryAll(keySelector, asc);
+        }
 
         /// <summary>
         /// Query All
         /// </summary>
         /// <param name="lsWhere"></param>
         /// <returns></returns>
-        IList<T> QueryAll(Expression<Func<T, bool>> where);
+        public IList<T> QueryAll(Expression<Func<T, bool>> where)
+        {
+            return Repository.QueryAll(where);
+        }
 
         /// <summary>
         /// Query All
         /// </summary>
         /// <param name="lsWhere"></param>
         /// <returns></returns>
-        IList<T> QueryAll(IList<Expression<Func<T, bool>>> lsWhere);
+        public IList<T> QueryAll(IList<Expression<Func<T, bool>>> lsWhere)
+        {
+            return Repository.QueryAll(lsWhere);
+        }
 
         /// <summary>
         /// Query All
@@ -72,7 +101,10 @@ namespace SqlSugarDemo.IRepository
         /// <param name="keySelector"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        IList<T> QueryAll(IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, object>> keySelector, bool asc);
+        public IList<T> QueryAll(IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, object>> keySelector, bool asc)
+        {
+            return Repository.QueryAll(lsWhere, keySelector, asc);
+        }
 
         /// <summary>
         /// Query All
@@ -81,7 +113,10 @@ namespace SqlSugarDemo.IRepository
         /// <param name="keySelector"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        IList<T> QueryAll(Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc);
+        public IList<T> QueryAll(Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc)
+        {
+            return Repository.QueryAll(where, keySelector, asc);
+        }
         #endregion
 
 
@@ -93,7 +128,10 @@ namespace SqlSugarDemo.IRepository
         /// <param name="size"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        IList<T> QueryPaging(int page, int size, out int count);
+        public IList<T> QueryPaging(int page, int size, out int count)
+        {
+            return Repository.QueryPaging(page, size, out count);
+        }
 
         /// <summary>
         /// Query Paging
@@ -102,7 +140,10 @@ namespace SqlSugarDemo.IRepository
         /// <param name="size"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        IList<T> QueryPaging(int page, int size, out int count, Expression<Func<T, object>> keySelector, bool asc);
+        public IList<T> QueryPaging(int page, int size, out int count, Expression<Func<T, object>> keySelector, bool asc)
+        {
+            return Repository.QueryPaging(page, size, out count, keySelector, asc);
+        }
 
         /// <summary>
         /// Query Paging
@@ -112,7 +153,10 @@ namespace SqlSugarDemo.IRepository
         /// <param name="count"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        IList<T> QueryPaging(int page, int size, out int count, Expression<Func<T, bool>> where);
+        public IList<T> QueryPaging(int page, int size, out int count, Expression<Func<T, bool>> where)
+        {
+            return Repository.QueryPaging(page, size, out count, where);
+        }
 
         /// <summary>
         /// Query Paging
@@ -122,7 +166,10 @@ namespace SqlSugarDemo.IRepository
         /// <param name="count"></param>
         /// <param name="lsWhere"></param>
         /// <returns></returns>
-        IList<T> QueryPaging(int page, int size, out int count, IList<Expression<Func<T, bool>>> lsWhere);
+        public IList<T> QueryPaging(int page, int size, out int count, IList<Expression<Func<T, bool>>> lsWhere)
+        {
+            return Repository.QueryPaging(page, size, out count, lsWhere);
+        }
 
         /// <summary>
         /// Query Paging
@@ -134,7 +181,10 @@ namespace SqlSugarDemo.IRepository
         /// <param name="keySelector"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        IList<T> QueryPaging(int page, int size, out int count, IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, object>> keySelector, bool asc);
+        public IList<T> QueryPaging(int page, int size, out int count, IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, object>> keySelector, bool asc)
+        {
+            return Repository.QueryPaging(page, size, out count, lsWhere, keySelector, asc);
+        }
 
         /// <summary>
         /// Query Paging
@@ -146,7 +196,10 @@ namespace SqlSugarDemo.IRepository
         /// <param name="keySelector"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        IList<T> QueryPaging(int page, int size, out int count, Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc);
+        public IList<T> QueryPaging(int page, int size, out int count, Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc)
+        {
+            return Repository.QueryPaging(page, size, out count, where, keySelector, asc);
+        }
         #endregion
         #endregion
 
@@ -157,21 +210,30 @@ namespace SqlSugarDemo.IRepository
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        int Add(T entity);
+        public int Add(T entity)
+        {
+            return Repository.Add(entity);
+        }
 
         /// <summary>
         /// Add
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        T Add1(T entity);
+        public T Add1(T entity)
+        {
+            return Repository.Add1(entity);
+        }
 
         /// <summary>
         /// Add
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        int Add(IEnumerable<T> entities);
+        public int Add(IEnumerable<T> entities)
+        {
+            return Repository.Add(entities);
+        }
         #endregion
 
 
@@ -181,14 +243,20 @@ namespace SqlSugarDemo.IRepository
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        int Update(T entity);
+        public int Update(T entity)
+        {
+            return Repository.Update(entity);
+        }
 
         /// <summary>
         /// Update
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        int Update(IEnumerable<T> entities);
+        public int Update(IEnumerable<T> entities)
+        {
+            return Repository.Update(entities);
+        }
         #endregion
 
 
@@ -197,13 +265,19 @@ namespace SqlSugarDemo.IRepository
         /// Delete
         /// </summary>
         /// <param name="entity"></param>
-        int Delete(T entity);
+        public int Delete(T entity)
+        {
+            return Repository.Delete(entity);
+        }
 
         /// <summary>
         /// Delete
         /// </summary>
         /// <param name="entity"></param>
-        int Delete(IEnumerable<T> entities);
+        public int Delete(IEnumerable<T> entities)
+        {
+            return Repository.Delete(entities);
+        }
 
         /// <summary>
         /// Delete
@@ -211,7 +285,10 @@ namespace SqlSugarDemo.IRepository
         /// <typeparam name="TKey"></typeparam>
         /// <param name="id"></param>
         /// <returns></returns>
-        int Delete<TKey>(TKey id);
+        public int Delete<TKey>(TKey id)
+        {
+            return Repository.Delete<TKey>(id);
+        }
 
         /// <summary>
         /// Delete
@@ -219,7 +296,10 @@ namespace SqlSugarDemo.IRepository
         /// <typeparam name="TKey"></typeparam>
         /// <param name="id"></param>
         /// <returns></returns>
-        int Delete<TKey>(IEnumerable<TKey> ids);
+        public int Delete<TKey>(IEnumerable<TKey> ids)
+        {
+            return Repository.Delete(ids);
+        }
         #endregion
     }
 }

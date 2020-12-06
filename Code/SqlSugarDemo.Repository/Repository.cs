@@ -521,7 +521,7 @@ namespace SqlSugarDemo.Repository
         /// <typeparam name="TKey"></typeparam>
         /// <param name="id"></param>
         /// <returns></returns>
-        public int Delete<TKey>(TKey id) where TKey : struct
+        public int Delete<TKey>(TKey id)
         {
             using (var db = GetDb())
             {
@@ -535,7 +535,7 @@ namespace SqlSugarDemo.Repository
         /// <typeparam name="TKey"></typeparam>
         /// <param name="id"></param>
         /// <returns></returns>
-        public int Delete<TKey>(IEnumerable<TKey> ids) where TKey : struct
+        public int Delete<TKey>(IEnumerable<TKey> ids)
         {
             using (var db = GetDb())
             {
