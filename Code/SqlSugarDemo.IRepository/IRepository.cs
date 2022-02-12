@@ -22,6 +22,14 @@ namespace SqlSugarDemo.IRepository
         /// <summary>
         /// Query Single
         /// </summary>
+        /// <typeparam name="Tkey"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<T> QuerySingleByIdAsync<Tkey>(Tkey id);
+
+        /// <summary>
+        /// Query Single
+        /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
         T QuerySingle(Expression<Func<T, bool>> where);

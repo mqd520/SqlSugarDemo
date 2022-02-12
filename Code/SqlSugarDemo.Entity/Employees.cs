@@ -5,7 +5,7 @@ using SqlSugar;
 namespace SqlSugarDemo.Entity
 {
     //Employees
-    [SugarTable("employees")]
+    [SugarTable("Employees")]
     public class Employees
     {
         /// <summary>

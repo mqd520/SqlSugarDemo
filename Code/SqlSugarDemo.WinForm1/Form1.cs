@@ -8,11 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Linq.Expressions;
+using System.Data.Common;
 
 using Common;
 using SqlSugarDemo.Entity;
 using SqlSugarDemo.IRepository;
 using SqlSugarDemo.Repository;
+using MySql.Data.MySqlClient;
 
 using SqlSugarDemo.WinForm1._02_Common;
 
@@ -32,7 +34,8 @@ namespace SqlSugarDemo.WinForm1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            //string sql = "select * from Customers";
+            //var dt = MySqlDb.GetTable(sql, null);
         }
 
 
@@ -67,5 +70,26 @@ namespace SqlSugarDemo.WinForm1
             Tool.FillListView(ls, myListView1);
         }
         #endregion
+
+        private async void button4_Click(object sender, EventArgs e)
+        {
+            //var ls = new List<Customers>();
+            //var customer = await CustomersRepository.QuerySingleByIdAsync<string>("ALFKI");
+            //ls.Add(customer);
+
+            //Tool.FillListView(ls, myListView1);
+
+
+            string sql = "select * from Customers";
+            var dt = await MySqlDb.GetTableAsync(sql, null);
+        }
+
+        private async Task TestAsync()
+        {
+            await Task.Run(() =>
+            {
+                System.Threading.Thread.Sleep(3 * 1000);
+            });
+        }
     }
 }

@@ -45,6 +45,21 @@ namespace SqlSugarDemo.Repository
         /// <summary>
         /// Query Single
         /// </summary>
+        /// <typeparam name="Tkey"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<T> QuerySingleByIdAsync<Tkey>(Tkey id)
+        {
+            using (var db = GetDb())
+            {
+                T entity = await db.Queryable<T>().In<Tkey>(id).FirstAsync();
+                return entity;
+            }
+        }
+
+        /// <summary>
+        /// Query Single
+        /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
         public T QuerySingle(Expression<Func<T, bool>> where)
