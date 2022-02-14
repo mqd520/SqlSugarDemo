@@ -128,6 +128,7 @@ namespace SqlSugarDemo.Repository
 
 
         #region Query All
+        #region Query All Sync
         /// <summary>
         /// Query All
         /// </summary>
@@ -256,7 +257,138 @@ namespace SqlSugarDemo.Repository
         #endregion
 
 
+        #region Query All Async
+        /// <summary>
+        /// Query All
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IList<T>> QueryAllAsync()
+        {
+            using (var db = GetDb())
+            {
+                return await db.Queryable<T>().Take(10).ToListAsync();
+            }
+        }
+
+        /// <summary>
+        /// Query All
+        /// </summary>
+        /// <param name="keySelector"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public async Task<IList<T>> QueryAllAsync(Expression<Func<T, object>> keySelector, bool asc)
+        {
+            using (var db = GetDb())
+            {
+                var query = db.Queryable<T>();
+                if (asc)
+                {
+                    query = query.OrderBy(keySelector, OrderByType.Asc);
+                }
+                else
+                {
+                    query = query.OrderBy(keySelector, OrderByType.Desc);
+                }
+
+                return await query.ToListAsync();
+            }
+        }
+
+        /// <summary>
+        /// Query All
+        /// </summary>
+        /// <param name="lsWhere"></param>
+        /// <returns></returns>
+        public async Task<IList<T>> QueryAllAsync(Expression<Func<T, bool>> where)
+        {
+            using (var db = GetDb())
+            {
+                var query = db.Queryable<T>();
+                query = query.Where(where);
+
+                return await query.ToListAsync();
+            }
+        }
+
+        /// <summary>
+        /// Query All
+        /// </summary>
+        /// <param name="lsWhere"></param>
+        /// <returns></returns>
+        public async Task<IList<T>> QueryAllAsync(IList<Expression<Func<T, bool>>> lsWhere)
+        {
+            using (var db = GetDb())
+            {
+                var query = db.Queryable<T>();
+                foreach (var item in lsWhere)
+                {
+                    query = query.Where(item);
+                }
+
+                return await query.ToListAsync();
+            }
+        }
+
+        /// <summary>
+        /// Query All
+        /// </summary>
+        /// <param name="lsWhere"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public async Task<IList<T>> QueryAllAsync(IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, object>> keySelector, bool asc)
+        {
+            using (var db = GetDb())
+            {
+                var query = db.Queryable<T>();
+                foreach (var item in lsWhere)
+                {
+                    query = query.Where(item);
+                }
+                if (asc)
+                {
+                    query = query.OrderBy(keySelector, OrderByType.Asc);
+                }
+                else
+                {
+                    query = query.OrderBy(keySelector, OrderByType.Desc);
+                }
+
+                return await query.ToListAsync();
+            }
+        }
+
+        /// <summary>
+        /// Query All
+        /// </summary>
+        /// <param name="where"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public async Task<IList<T>> QueryAllAsync(Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc)
+        {
+            using (var db = GetDb())
+            {
+                var query = db.Queryable<T>();
+                query = query.Where(where);
+                if (asc)
+                {
+                    query = query.OrderBy(keySelector, OrderByType.Asc);
+                }
+                else
+                {
+                    query = query.OrderBy(keySelector, OrderByType.Desc);
+                }
+
+                return await query.ToListAsync();
+            }
+        }
+        #endregion
+        #endregion
+
+
         #region Query Paging
+        #region Query Paging Sync
         /// <summary>
         /// Query Paging
         /// </summary>
@@ -467,6 +599,253 @@ namespace SqlSugarDemo.Repository
                 }
             }
         }
+        #endregion
+
+
+        #region Query Paging Async
+        /// <summary>
+        /// Query Paging
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="recvTotalRecordsHandle"></param>
+        /// <returns></returns>
+        public async Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle)
+        {
+            using (var db = GetDb())
+            {
+                int count = 0;
+                var query = db.Queryable<T>();
+
+                count = await query.CountAsync();
+                if (recvTotalRecordsHandle != null)
+                {
+                    recvTotalRecordsHandle.Invoke(count);
+                }
+
+                if (count > 0)
+                {
+                    query = query.Skip((page - 1) * size).Take(size);
+
+                    return await query.ToListAsync();
+                }
+                else
+                {
+                    return new List<T>();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Query Paging
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="recvTotalRecordsHandle"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public async Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, Expression<Func<T, object>> keySelector, bool asc)
+        {
+            using (var db = GetDb())
+            {
+                int count = 0;
+                var query = db.Queryable<T>();
+
+                count = await query.CountAsync();
+                if (recvTotalRecordsHandle != null)
+                {
+                    recvTotalRecordsHandle.Invoke(count);
+                }
+
+                if (count > 0)
+                {
+                    if (asc)
+                    {
+                        query = query.OrderBy(keySelector, OrderByType.Asc);
+                    }
+                    else
+                    {
+                        query = query.OrderBy(keySelector, OrderByType.Desc);
+                    }
+
+                    query = query.Skip((page - 1) * size).Take(size);
+
+                    return await query.ToListAsync();
+                }
+                else
+                {
+                    return new List<T>();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Query Paging
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="recvTotalRecordsHandle"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public async Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, Expression<Func<T, bool>> where)
+        {
+            using (var db = GetDb())
+            {
+                int count = 0;
+                var query = db.Queryable<T>();
+                query = query.Where(where);
+
+                count = await query.CountAsync();
+                if (recvTotalRecordsHandle != null)
+                {
+                    recvTotalRecordsHandle.Invoke(count);
+                }
+
+                if (count > 0)
+                {
+                    query = query.Skip((page - 1) * size).Take(size);
+
+                    return await query.ToListAsync();
+                }
+                else
+                {
+                    return new List<T>();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Query Paging
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="recvTotalRecordsHandle"></param>
+        /// <param name="lsWhere"></param>
+        /// <returns></returns>
+        public async Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, IList<Expression<Func<T, bool>>> lsWhere)
+        {
+            using (var db = GetDb())
+            {
+                int count = 0;
+                var query = db.Queryable<T>();
+                foreach (var item in lsWhere)
+                {
+                    query = query.Where(item);
+                }
+
+                count = await query.CountAsync();
+                if (recvTotalRecordsHandle != null)
+                {
+                    recvTotalRecordsHandle.Invoke(count);
+                }
+
+                if (count > 0)
+                {
+                    query = query.Skip((page - 1) * size).Take(size);
+
+                    return await query.ToListAsync();
+                }
+                else
+                {
+                    return new List<T>();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Query Paging
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="recvTotalRecordsHandle"></param>
+        /// <param name="lsWhere"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public async Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, object>> keySelector, bool asc)
+        {
+            using (var db = GetDb())
+            {
+                int count = 0;
+                var query = db.Queryable<T>();
+                foreach (var item in lsWhere)
+                {
+                    query = query.Where(item);
+                }
+
+                count = await query.CountAsync();
+                if (recvTotalRecordsHandle != null)
+                {
+                    recvTotalRecordsHandle.Invoke(count);
+                }
+
+                if (count > 0)
+                {
+                    if (asc)
+                    {
+                        query = query.OrderBy(keySelector, OrderByType.Asc);
+                    }
+                    else
+                    {
+                        query = query.OrderBy(keySelector, OrderByType.Desc);
+                    }
+                    query = query.Skip((page - 1) * size).Take(size);
+
+                    return await query.ToListAsync();
+                }
+                else
+                {
+                    return new List<T>();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Query Paging
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="recvTotalRecordsHandle"></param>
+        /// <param name="where"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public async Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc)
+        {
+            using (var db = GetDb())
+            {
+                int count = 0;
+                var query = db.Queryable<T>();
+                query = query.Where(where);
+
+                count = await query.CountAsync();
+                if (recvTotalRecordsHandle != null)
+                {
+                    recvTotalRecordsHandle.Invoke(count);
+                }
+
+                if (count > 0)
+                {
+                    if (asc)
+                    {
+                        query = query.OrderBy(keySelector, OrderByType.Asc);
+                    }
+                    else
+                    {
+                        query = query.OrderBy(keySelector, OrderByType.Desc);
+                    }
+                    query = query.Skip((page - 1) * size).Take(size);
+
+                    return await query.ToListAsync();
+                }
+                else
+                {
+                    return new List<T>();
+                }
+            }
+        }
+        #endregion
         #endregion
         #endregion
 

@@ -65,6 +65,7 @@ namespace SqlSugarDemo.IRepository
 
 
         #region Query All
+        #region Query All Sync
         /// <summary>
         /// Query All
         /// </summary>
@@ -113,7 +114,58 @@ namespace SqlSugarDemo.IRepository
         #endregion
 
 
+        #region Query All Async
+        /// <summary>
+        /// Query All
+        /// </summary>
+        /// <returns></returns>
+        Task<IList<T>> QueryAllAsync();
+
+        /// <summary>
+        /// Query All
+        /// </summary>
+        /// <param name="keySelector"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        Task<IList<T>> QueryAllAsync(Expression<Func<T, object>> keySelector, bool asc);
+
+        /// <summary>
+        /// Query All
+        /// </summary>
+        /// <param name="lsWhere"></param>
+        /// <returns></returns>
+        Task<IList<T>> QueryAllAsync(Expression<Func<T, bool>> where);
+
+        /// <summary>
+        /// Query All
+        /// </summary>
+        /// <param name="lsWhere"></param>
+        /// <returns></returns>
+        Task<IList<T>> QueryAllAsync(IList<Expression<Func<T, bool>>> lsWhere);
+
+        /// <summary>
+        /// Query All
+        /// </summary>
+        /// <param name="lsWhere"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        Task<IList<T>> QueryAllAsync(IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, object>> keySelector, bool asc);
+
+        /// <summary>
+        /// Query All
+        /// </summary>
+        /// <param name="where"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        Task<IList<T>> QueryAllAsync(Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc);
+        #endregion
+        #endregion
+
+
         #region Query Paging
+        #region Query Paging Sync
         /// <summary>
         /// Query Paging
         /// </summary>
@@ -175,6 +227,74 @@ namespace SqlSugarDemo.IRepository
         /// <param name="asc"></param>
         /// <returns></returns>
         IList<T> QueryPaging(int page, int size, out int count, Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc);
+        #endregion
+
+
+        #region Query Paging Async
+        /// <summary>
+        /// Query Paging
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="recvTotalRecordsHandle"></param>
+        /// <returns></returns>
+        Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle);
+
+        /// <summary>
+        /// Query Paging
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="recvTotalRecordsHandle"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, Expression<Func<T, object>> keySelector, bool asc);
+
+        /// <summary>
+        /// Query Paging
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="recvTotalRecordsHandle"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, Expression<Func<T, bool>> where);
+
+        /// <summary>
+        /// Query Paging
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="recvTotalRecordsHandle"></param>
+        /// <param name="lsWhere"></param>
+        /// <returns></returns>
+        Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, IList<Expression<Func<T, bool>>> lsWhere);
+
+        /// <summary>
+        /// Query Paging
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="recvTotalRecordsHandle"></param>
+        /// <param name="lsWhere"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, object>> keySelector, bool asc);
+
+        /// <summary>
+        /// Query Paging
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="recvTotalRecordsHandle"></param>
+        /// <param name="where"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc);
+        #endregion
         #endregion
         #endregion
 
