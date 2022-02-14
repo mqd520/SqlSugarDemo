@@ -11,6 +11,7 @@ namespace SqlSugarDemo.IRepository
     {
         #region Query
         #region Query Single
+        #region Query Single Sync
         /// <summary>
         /// Query Single
         /// </summary>
@@ -18,14 +19,6 @@ namespace SqlSugarDemo.IRepository
         /// <param name="id"></param>
         /// <returns></returns>
         T QuerySingleById<Tkey>(Tkey id);
-
-        /// <summary>
-        /// Query Single
-        /// </summary>
-        /// <typeparam name="Tkey"></typeparam>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Task<T> QuerySingleByIdAsync<Tkey>(Tkey id);
 
         /// <summary>
         /// Query Single
@@ -41,6 +34,33 @@ namespace SqlSugarDemo.IRepository
         /// <param name="where"></param>
         /// <returns></returns>
         T QuerySingle(IEnumerable<Expression<Func<T, bool>>> wheres);
+        #endregion
+
+
+        #region Query Single Async
+        /// <summary>
+        /// Query Single
+        /// </summary>
+        /// <typeparam name="Tkey"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<T> QuerySingleByIdAsync<Tkey>(Tkey id);
+
+        /// <summary>
+        /// Query Single
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        Task<T> QuerySingleAsync(Expression<Func<T, bool>> where);
+
+        /// <summary>
+        /// Query Single
+        /// </summary>
+        /// <typeparam name="Tkey"></typeparam>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        Task<T> QuerySingleAsync(IEnumerable<Expression<Func<T, bool>>> wheres);
+        #endregion
         #endregion
 
 
@@ -160,6 +180,7 @@ namespace SqlSugarDemo.IRepository
 
 
         #region Add
+        #region Add Sync
         /// <summary>
         /// Add
         /// </summary>
@@ -183,7 +204,33 @@ namespace SqlSugarDemo.IRepository
         #endregion
 
 
+        #region Add Async
+        /// <summary>
+        /// Add
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        Task<int> AddAsync(T entity);
+
+        /// <summary>
+        /// Add
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        Task<T> Add1Async(T entity);
+
+        /// <summary>
+        /// Add
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        Task<int> AddAsync(IEnumerable<T> entities);
+        #endregion
+        #endregion
+
+
         #region Update
+        #region Update Sync
         /// <summary>
         /// Update
         /// </summary>
@@ -200,7 +247,26 @@ namespace SqlSugarDemo.IRepository
         #endregion
 
 
+        #region Update Async
+        /// <summary>
+        /// Update
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        Task<int> UpdateAsync(T entity);
+
+        /// <summary>
+        /// Update
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        Task<int> UpdateAsync(IEnumerable<T> entities);
+        #endregion
+        #endregion
+
+
         #region Delete
+        #region Delete Sync
         /// <summary>
         /// Delete
         /// </summary>
@@ -228,6 +294,38 @@ namespace SqlSugarDemo.IRepository
         /// <param name="id"></param>
         /// <returns></returns>
         int Delete<TKey>(IEnumerable<TKey> ids);
+        #endregion
+
+
+        #region Delete Async
+        /// <summary>
+        /// Delete
+        /// </summary>
+        /// <param name="entity"></param>
+        Task<int> DeleteAsync(T entity);
+
+        /// <summary>
+        /// Delete
+        /// </summary>
+        /// <param name="entity"></param>
+        Task<int> DeleteAsync(IEnumerable<T> entities);
+
+        /// <summary>
+        /// Delete
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<int> DeleteAsync<TKey>(TKey id);
+
+        /// <summary>
+        /// Delete
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<int> DeleteAsync<TKey>(IEnumerable<TKey> ids);
+        #endregion
         #endregion
     }
 }

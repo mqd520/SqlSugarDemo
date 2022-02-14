@@ -28,6 +28,7 @@ namespace SqlSugarDemo.Repository
 
         #region Query
         #region Query Single
+        #region Query Single Sync
         /// <summary>
         /// Query Single
         /// </summary>
@@ -39,21 +40,6 @@ namespace SqlSugarDemo.Repository
             using (var db = GetDb())
             {
                 return db.Queryable<T>().In<Tkey>(id).First();
-            }
-        }
-
-        /// <summary>
-        /// Query Single
-        /// </summary>
-        /// <typeparam name="Tkey"></typeparam>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task<T> QuerySingleByIdAsync<Tkey>(Tkey id)
-        {
-            using (var db = GetDb())
-            {
-                T entity = await db.Queryable<T>().In<Tkey>(id).FirstAsync();
-                return entity;
             }
         }
 
@@ -89,6 +75,57 @@ namespace SqlSugarDemo.Repository
             }
         }
         #endregion
+
+
+        #region Query Single Async
+        /// <summary>
+        /// Query Single
+        /// </summary>
+        /// <typeparam name="Tkey"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<T> QuerySingleByIdAsync<Tkey>(Tkey id)
+        {
+            using (var db = GetDb())
+            {
+                return await db.Queryable<T>().In<Tkey>(id).FirstAsync();
+            }
+        }
+
+        /// <summary>
+        /// Query Single
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public async Task<T> QuerySingleAsync(Expression<Func<T, bool>> where)
+        {
+            using (var db = GetDb())
+            {
+                return await db.Queryable<T>().Where(where).FirstAsync();
+            }
+        }
+
+        /// <summary>
+        /// Query Single
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public async Task<T> QuerySingleAsync(IEnumerable<Expression<Func<T, bool>>> wheres)
+        {
+            using (var db = GetDb())
+            {
+                var query = db.Queryable<T>();
+                foreach (var item in wheres)
+                {
+                    query = query.Where(item);
+                }
+
+                return await query.FirstAsync();
+            }
+        }
+        #endregion
+        #endregion
+
 
         #region Query All
         /// <summary>
@@ -435,6 +472,7 @@ namespace SqlSugarDemo.Repository
 
 
         #region Add
+        #region Add Sync
         /// <summary>
         /// Add
         /// </summary>
@@ -476,7 +514,51 @@ namespace SqlSugarDemo.Repository
         #endregion
 
 
+        #region Add Async
+        /// <summary>
+        /// Add
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<int> AddAsync(T entity)
+        {
+            using (var db = GetDb())
+            {
+                return await db.Insertable<T>(entity).ExecuteReturnIdentityAsync();
+            }
+        }
+
+        /// <summary>
+        /// Add1
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<T> Add1Async(T entity)
+        {
+            using (var db = GetDb())
+            {
+                return await db.Insertable<T>(entity).ExecuteReturnEntityAsync();
+            }
+        }
+
+        /// <summary>
+        /// Add
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public async Task<int> AddAsync(IEnumerable<T> entities)
+        {
+            using (var db = GetDb())
+            {
+                return await db.Insertable<T>(entities.ToArray()).ExecuteCommandAsync();
+            }
+        }
+        #endregion
+        #endregion
+
+
         #region Update
+        #region Update Sync
         /// <summary>
         /// Update
         /// </summary>
@@ -505,7 +587,38 @@ namespace SqlSugarDemo.Repository
         #endregion
 
 
+        #region Update Async
+        /// <summary>
+        /// Update
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync(T entity)
+        {
+            using (var db = GetDb())
+            {
+                return await db.Updateable<T>(entity).ExecuteCommandAsync();
+            }
+        }
+
+        /// <summary>
+        /// Update
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync(IEnumerable<T> entities)
+        {
+            using (var db = GetDb())
+            {
+                return await db.Updateable<T>(entities.ToList()).ExecuteCommandAsync();
+            }
+        }
+        #endregion
+        #endregion
+
+
         #region Delete
+        #region Delete Sync
         /// <summary>
         /// Delete
         /// </summary>
@@ -557,6 +670,62 @@ namespace SqlSugarDemo.Repository
                 return db.Deleteable<T>().In<TKey>(ids.ToArray()).ExecuteCommand();
             }
         }
+        #endregion
+
+
+        #region Delete Async
+        /// <summary>
+        /// Delete
+        /// </summary>
+        /// <param name="entity"></param>
+        public async Task<int> DeleteAsync(T entity)
+        {
+            using (var db = GetDb())
+            {
+                return await db.Deleteable<T>().ExecuteCommandAsync();
+            }
+        }
+
+        /// <summary>
+        /// Delete
+        /// </summary>
+        /// <param name="entity"></param>
+        public async Task<int> DeleteAsync(IEnumerable<T> entities)
+        {
+            using (var db = GetDb())
+            {
+                return await db.Deleteable<T>().Where(entities.ToList()).ExecuteCommandAsync();
+            }
+        }
+
+        /// <summary>
+        /// Delete
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<int> DeleteAsync<TKey>(TKey id)
+        {
+            using (var db = GetDb())
+            {
+                return await db.Deleteable<T>().In<TKey>(id).ExecuteCommandAsync();
+            }
+        }
+
+        /// <summary>
+        /// Delete
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<int> DeleteAsync<TKey>(IEnumerable<TKey> ids)
+        {
+            using (var db = GetDb())
+            {
+                return await db.Deleteable<T>().In<TKey>(ids.ToArray()).ExecuteCommandAsync();
+            }
+        }
+        #endregion
         #endregion
     }
 }
