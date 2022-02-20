@@ -313,7 +313,7 @@ namespace SqlSugarDemo.IRepository
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        T Add1(T entity);
+        T AddAndReturn(T entity);
 
         /// <summary>
         /// Add
@@ -337,7 +337,7 @@ namespace SqlSugarDemo.IRepository
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        Task<T> Add1Async(T entity);
+        Task<T> AddAndReturnAsync(T entity);
 
         /// <summary>
         /// Add

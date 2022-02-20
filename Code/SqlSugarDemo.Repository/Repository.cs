@@ -35,7 +35,7 @@ namespace SqlSugarDemo.Repository
         /// <typeparam name="Tkey"></typeparam>
         /// <param name="id"></param>
         /// <returns></returns>
-        public T QuerySingleById<Tkey>(Tkey id)
+        public virtual T QuerySingleById<Tkey>(Tkey id)
         {
             using (var db = GetDb())
             {
@@ -48,7 +48,7 @@ namespace SqlSugarDemo.Repository
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        public T QuerySingle(Expression<Func<T, bool>> where)
+        public virtual T QuerySingle(Expression<Func<T, bool>> where)
         {
             using (var db = GetDb())
             {
@@ -61,7 +61,7 @@ namespace SqlSugarDemo.Repository
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        public T QuerySingle(IEnumerable<Expression<Func<T, bool>>> wheres)
+        public virtual T QuerySingle(IEnumerable<Expression<Func<T, bool>>> wheres)
         {
             using (var db = GetDb())
             {
@@ -84,7 +84,7 @@ namespace SqlSugarDemo.Repository
         /// <typeparam name="Tkey"></typeparam>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<T> QuerySingleByIdAsync<Tkey>(Tkey id)
+        public virtual async Task<T> QuerySingleByIdAsync<Tkey>(Tkey id)
         {
             using (var db = GetDb())
             {
@@ -97,7 +97,7 @@ namespace SqlSugarDemo.Repository
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        public async Task<T> QuerySingleAsync(Expression<Func<T, bool>> where)
+        public virtual async Task<T> QuerySingleAsync(Expression<Func<T, bool>> where)
         {
             using (var db = GetDb())
             {
@@ -110,7 +110,7 @@ namespace SqlSugarDemo.Repository
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        public async Task<T> QuerySingleAsync(IEnumerable<Expression<Func<T, bool>>> wheres)
+        public virtual async Task<T> QuerySingleAsync(IEnumerable<Expression<Func<T, bool>>> wheres)
         {
             using (var db = GetDb())
             {
@@ -133,7 +133,7 @@ namespace SqlSugarDemo.Repository
         /// Query All
         /// </summary>
         /// <returns></returns>
-        public IList<T> QueryAll()
+        public virtual IList<T> QueryAll()
         {
             using (var db = GetDb())
             {
@@ -147,7 +147,7 @@ namespace SqlSugarDemo.Repository
         /// <param name="keySelector"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public IList<T> QueryAll(Expression<Func<T, object>> keySelector, bool asc)
+        public virtual IList<T> QueryAll(Expression<Func<T, object>> keySelector, bool asc)
         {
             using (var db = GetDb())
             {
@@ -170,7 +170,7 @@ namespace SqlSugarDemo.Repository
         /// </summary>
         /// <param name="lsWhere"></param>
         /// <returns></returns>
-        public IList<T> QueryAll(Expression<Func<T, bool>> where)
+        public virtual IList<T> QueryAll(Expression<Func<T, bool>> where)
         {
             using (var db = GetDb())
             {
@@ -186,7 +186,7 @@ namespace SqlSugarDemo.Repository
         /// </summary>
         /// <param name="lsWhere"></param>
         /// <returns></returns>
-        public IList<T> QueryAll(IList<Expression<Func<T, bool>>> lsWhere)
+        public virtual IList<T> QueryAll(IList<Expression<Func<T, bool>>> lsWhere)
         {
             using (var db = GetDb())
             {
@@ -207,7 +207,7 @@ namespace SqlSugarDemo.Repository
         /// <param name="keySelector"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public IList<T> QueryAll(IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, object>> keySelector, bool asc)
+        public virtual IList<T> QueryAll(IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, object>> keySelector, bool asc)
         {
             using (var db = GetDb())
             {
@@ -236,7 +236,7 @@ namespace SqlSugarDemo.Repository
         /// <param name="keySelector"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public IList<T> QueryAll(Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc)
+        public virtual IList<T> QueryAll(Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc)
         {
             using (var db = GetDb())
             {
@@ -262,7 +262,7 @@ namespace SqlSugarDemo.Repository
         /// Query All
         /// </summary>
         /// <returns></returns>
-        public async Task<IList<T>> QueryAllAsync()
+        public virtual async Task<IList<T>> QueryAllAsync()
         {
             using (var db = GetDb())
             {
@@ -276,7 +276,7 @@ namespace SqlSugarDemo.Repository
         /// <param name="keySelector"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public async Task<IList<T>> QueryAllAsync(Expression<Func<T, object>> keySelector, bool asc)
+        public virtual async Task<IList<T>> QueryAllAsync(Expression<Func<T, object>> keySelector, bool asc)
         {
             using (var db = GetDb())
             {
@@ -299,7 +299,7 @@ namespace SqlSugarDemo.Repository
         /// </summary>
         /// <param name="lsWhere"></param>
         /// <returns></returns>
-        public async Task<IList<T>> QueryAllAsync(Expression<Func<T, bool>> where)
+        public virtual async Task<IList<T>> QueryAllAsync(Expression<Func<T, bool>> where)
         {
             using (var db = GetDb())
             {
@@ -315,7 +315,7 @@ namespace SqlSugarDemo.Repository
         /// </summary>
         /// <param name="lsWhere"></param>
         /// <returns></returns>
-        public async Task<IList<T>> QueryAllAsync(IList<Expression<Func<T, bool>>> lsWhere)
+        public virtual async Task<IList<T>> QueryAllAsync(IList<Expression<Func<T, bool>>> lsWhere)
         {
             using (var db = GetDb())
             {
@@ -336,7 +336,7 @@ namespace SqlSugarDemo.Repository
         /// <param name="keySelector"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public async Task<IList<T>> QueryAllAsync(IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, object>> keySelector, bool asc)
+        public virtual async Task<IList<T>> QueryAllAsync(IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, object>> keySelector, bool asc)
         {
             using (var db = GetDb())
             {
@@ -365,7 +365,7 @@ namespace SqlSugarDemo.Repository
         /// <param name="keySelector"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public async Task<IList<T>> QueryAllAsync(Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc)
+        public virtual async Task<IList<T>> QueryAllAsync(Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc)
         {
             using (var db = GetDb())
             {
@@ -396,7 +396,7 @@ namespace SqlSugarDemo.Repository
         /// <param name="size"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public IList<T> QueryPaging(int page, int size, out int count)
+        public virtual IList<T> QueryPaging(int page, int size, out int count)
         {
             using (var db = GetDb())
             {
@@ -424,7 +424,7 @@ namespace SqlSugarDemo.Repository
         /// <param name="size"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public IList<T> QueryPaging(int page, int size, out int count, Expression<Func<T, object>> keySelector, bool asc)
+        public virtual IList<T> QueryPaging(int page, int size, out int count, Expression<Func<T, object>> keySelector, bool asc)
         {
             using (var db = GetDb())
             {
@@ -462,7 +462,7 @@ namespace SqlSugarDemo.Repository
         /// <param name="count"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public IList<T> QueryPaging(int page, int size, out int count, Expression<Func<T, bool>> where)
+        public virtual IList<T> QueryPaging(int page, int size, out int count, Expression<Func<T, bool>> where)
         {
             using (var db = GetDb())
             {
@@ -492,7 +492,7 @@ namespace SqlSugarDemo.Repository
         /// <param name="count"></param>
         /// <param name="lsWhere"></param>
         /// <returns></returns>
-        public IList<T> QueryPaging(int page, int size, out int count, IList<Expression<Func<T, bool>>> lsWhere)
+        public virtual IList<T> QueryPaging(int page, int size, out int count, IList<Expression<Func<T, bool>>> lsWhere)
         {
             using (var db = GetDb())
             {
@@ -527,7 +527,7 @@ namespace SqlSugarDemo.Repository
         /// <param name="keySelector"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public IList<T> QueryPaging(int page, int size, out int count, IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, object>> keySelector, bool asc)
+        public virtual IList<T> QueryPaging(int page, int size, out int count, IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, object>> keySelector, bool asc)
         {
             using (var db = GetDb())
             {
@@ -570,7 +570,7 @@ namespace SqlSugarDemo.Repository
         /// <param name="keySelector"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public IList<T> QueryPaging(int page, int size, out int count, Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc)
+        public virtual IList<T> QueryPaging(int page, int size, out int count, Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc)
         {
             using (var db = GetDb())
             {
@@ -610,7 +610,7 @@ namespace SqlSugarDemo.Repository
         /// <param name="size"></param>
         /// <param name="recvTotalRecordsHandle"></param>
         /// <returns></returns>
-        public async Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle)
+        public virtual async Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle)
         {
             using (var db = GetDb())
             {
@@ -645,7 +645,7 @@ namespace SqlSugarDemo.Repository
         /// <param name="keySelector"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public async Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, Expression<Func<T, object>> keySelector, bool asc)
+        public virtual async Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, Expression<Func<T, object>> keySelector, bool asc)
         {
             using (var db = GetDb())
             {
@@ -688,7 +688,7 @@ namespace SqlSugarDemo.Repository
         /// <param name="recvTotalRecordsHandle"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public async Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, Expression<Func<T, bool>> where)
+        public virtual async Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, Expression<Func<T, bool>> where)
         {
             using (var db = GetDb())
             {
@@ -723,7 +723,7 @@ namespace SqlSugarDemo.Repository
         /// <param name="recvTotalRecordsHandle"></param>
         /// <param name="lsWhere"></param>
         /// <returns></returns>
-        public async Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, IList<Expression<Func<T, bool>>> lsWhere)
+        public virtual async Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, IList<Expression<Func<T, bool>>> lsWhere)
         {
             using (var db = GetDb())
             {
@@ -763,7 +763,7 @@ namespace SqlSugarDemo.Repository
         /// <param name="keySelector"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public async Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, object>> keySelector, bool asc)
+        public virtual async Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, IList<Expression<Func<T, bool>>> lsWhere, Expression<Func<T, object>> keySelector, bool asc)
         {
             using (var db = GetDb())
             {
@@ -811,7 +811,7 @@ namespace SqlSugarDemo.Repository
         /// <param name="keySelector"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public async Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc)
+        public virtual async Task<IList<T>> QueryPagingAsync(int page, int size, Action<int> recvTotalRecordsHandle, Expression<Func<T, bool>> where, Expression<Func<T, object>> keySelector, bool asc)
         {
             using (var db = GetDb())
             {
@@ -857,7 +857,7 @@ namespace SqlSugarDemo.Repository
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public int Add(T entity)
+        public virtual int Add(T entity)
         {
             using (var db = GetDb())
             {
@@ -870,7 +870,7 @@ namespace SqlSugarDemo.Repository
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public T Add1(T entity)
+        public virtual T AddAndReturn(T entity)
         {
             using (var db = GetDb())
             {
@@ -883,7 +883,7 @@ namespace SqlSugarDemo.Repository
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public int Add(IEnumerable<T> entities)
+        public virtual int Add(IEnumerable<T> entities)
         {
             using (var db = GetDb())
             {
@@ -899,7 +899,7 @@ namespace SqlSugarDemo.Repository
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> AddAsync(T entity)
+        public virtual async Task<int> AddAsync(T entity)
         {
             using (var db = GetDb())
             {
@@ -912,7 +912,7 @@ namespace SqlSugarDemo.Repository
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<T> Add1Async(T entity)
+        public virtual async Task<T> AddAndReturnAsync(T entity)
         {
             using (var db = GetDb())
             {
@@ -925,7 +925,7 @@ namespace SqlSugarDemo.Repository
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public async Task<int> AddAsync(IEnumerable<T> entities)
+        public virtual async Task<int> AddAsync(IEnumerable<T> entities)
         {
             using (var db = GetDb())
             {
@@ -943,7 +943,7 @@ namespace SqlSugarDemo.Repository
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public int Update(T entity)
+        public virtual int Update(T entity)
         {
             using (var db = GetDb())
             {
@@ -956,7 +956,7 @@ namespace SqlSugarDemo.Repository
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public int Update(IEnumerable<T> entities)
+        public virtual int Update(IEnumerable<T> entities)
         {
             using (var db = GetDb())
             {
@@ -972,7 +972,7 @@ namespace SqlSugarDemo.Repository
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateAsync(T entity)
+        public virtual async Task<int> UpdateAsync(T entity)
         {
             using (var db = GetDb())
             {
@@ -985,7 +985,7 @@ namespace SqlSugarDemo.Repository
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public async Task<int> UpdateAsync(IEnumerable<T> entities)
+        public virtual async Task<int> UpdateAsync(IEnumerable<T> entities)
         {
             using (var db = GetDb())
             {
@@ -1002,7 +1002,7 @@ namespace SqlSugarDemo.Repository
         /// Delete
         /// </summary>
         /// <param name="entity"></param>
-        public int Delete(T entity)
+        public virtual int Delete(T entity)
         {
             using (var db = GetDb())
             {
@@ -1014,7 +1014,7 @@ namespace SqlSugarDemo.Repository
         /// Delete
         /// </summary>
         /// <param name="entity"></param>
-        public int Delete(IEnumerable<T> entities)
+        public virtual int Delete(IEnumerable<T> entities)
         {
             using (var db = GetDb())
             {
@@ -1028,7 +1028,7 @@ namespace SqlSugarDemo.Repository
         /// <typeparam name="TKey"></typeparam>
         /// <param name="id"></param>
         /// <returns></returns>
-        public int Delete<TKey>(TKey id)
+        public virtual int Delete<TKey>(TKey id)
         {
             using (var db = GetDb())
             {
@@ -1042,7 +1042,7 @@ namespace SqlSugarDemo.Repository
         /// <typeparam name="TKey"></typeparam>
         /// <param name="id"></param>
         /// <returns></returns>
-        public int Delete<TKey>(IEnumerable<TKey> ids)
+        public virtual int Delete<TKey>(IEnumerable<TKey> ids)
         {
             using (var db = GetDb())
             {
@@ -1057,7 +1057,7 @@ namespace SqlSugarDemo.Repository
         /// Delete
         /// </summary>
         /// <param name="entity"></param>
-        public async Task<int> DeleteAsync(T entity)
+        public virtual async Task<int> DeleteAsync(T entity)
         {
             using (var db = GetDb())
             {
@@ -1069,7 +1069,7 @@ namespace SqlSugarDemo.Repository
         /// Delete
         /// </summary>
         /// <param name="entity"></param>
-        public async Task<int> DeleteAsync(IEnumerable<T> entities)
+        public virtual async Task<int> DeleteAsync(IEnumerable<T> entities)
         {
             using (var db = GetDb())
             {
@@ -1083,7 +1083,7 @@ namespace SqlSugarDemo.Repository
         /// <typeparam name="TKey"></typeparam>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<int> DeleteAsync<TKey>(TKey id)
+        public virtual async Task<int> DeleteAsync<TKey>(TKey id)
         {
             using (var db = GetDb())
             {
@@ -1097,7 +1097,7 @@ namespace SqlSugarDemo.Repository
         /// <typeparam name="TKey"></typeparam>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<int> DeleteAsync<TKey>(IEnumerable<TKey> ids)
+        public virtual async Task<int> DeleteAsync<TKey>(IEnumerable<TKey> ids)
         {
             using (var db = GetDb())
             {
